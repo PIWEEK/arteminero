@@ -1,7 +1,22 @@
-export class AudioSystem {
+import { System } from './System'
+
+export class AudioSystem extends System {
   #context = null
 
-  constructor(context) {
-    this.#context = context
+  constructor(componentRegistry, resources, options) {
+    super(componentRegistry, resources)
+    this.#context = options?.context
+  }
+
+  update = () => {
+
+  }
+
+  start() {
+
+  }
+
+  stop() {
+
   }
 }

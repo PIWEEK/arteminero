@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       gl-matrix:
-        specifier: ^3.4.3
-        version: 3.4.3
+        specifier: 4.0.0-beta.2
+        version: 4.0.0-beta.2
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.4
@@ -500,8 +500,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  gl-matrix@3.4.3:
-    resolution: {integrity: sha512-wcCp8vu8FT22BnvKVPjXa/ICBWRq/zjFfdofZy1WSpQZpphblv12/bOQLBC1rMM7SGOFS9ltVmKOHil5+Ml7gA==}
+  gl-matrix@4.0.0-beta.2:
+    resolution: {integrity: sha512-OF6IkQpMkF8p2CZF9EtzYZPlPaW3M41KMsgZGlTKmMv/nWaP6GMJi9V5tI+oPn8FG0io85Q5ZtKpCXP4u6YmDA==}
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
@@ -1174,7 +1174,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  gl-matrix@3.4.3: {}
+  gl-matrix@4.0.0-beta.2: {}
 
   glob@10.4.5:
     dependencies:
