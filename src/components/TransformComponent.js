@@ -35,6 +35,7 @@ export class TransformComponent extends Component {
 
   set x(value) {
     this.#position.x = value
+    this.#updatable.set()
   }
 
   get y() {
@@ -43,6 +44,7 @@ export class TransformComponent extends Component {
 
   set y(value) {
     this.#position.y = value
+    this.#updatable.set()
   }
 
   get z() {
@@ -51,6 +53,7 @@ export class TransformComponent extends Component {
 
   set z(value) {
     this.#position.z = value
+    this.#updatable.set()
   }
 
   get rotationX() {
@@ -59,6 +62,7 @@ export class TransformComponent extends Component {
 
   set rotationX(value) {
     this.#rotation.x = value
+    this.#updatable.set()
   }
 
   get rotationY() {
@@ -67,6 +71,7 @@ export class TransformComponent extends Component {
 
   set rotationY(value) {
     this.#rotation.y = value
+    this.#updatable.set()
   }
 
   get rotationZ() {
@@ -75,6 +80,7 @@ export class TransformComponent extends Component {
 
   set rotationZ(value) {
     this.#rotation.z = value
+    this.#updatable.set()
   }
 
   get scaleX() {
@@ -83,6 +89,7 @@ export class TransformComponent extends Component {
 
   set scaleX(value) {
     this.#scale.x = value
+    this.#updatable.set()
   }
 
   get scaleY() {
@@ -91,6 +98,7 @@ export class TransformComponent extends Component {
 
   set scaleY(value) {
     this.#scale.y = value
+    this.#updatable.set()
   }
 
   get scaleZ() {
@@ -99,6 +107,7 @@ export class TransformComponent extends Component {
 
   set scaleZ(value) {
     this.#scale.z = value
+    this.#updatable.set()
   }
 
   update() {
@@ -109,5 +118,6 @@ export class TransformComponent extends Component {
       .rotateY(this.#rotation.y)
       .rotateX(this.#rotation.x)
       .scale(this.#scale)
+    this.#updatable.reset()
   }
 }

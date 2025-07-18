@@ -5,6 +5,7 @@ import { Resources } from './core/Resources.js'
 import { InputSystem } from './systems/InputSystem.js'
 import { SchedulerSystem } from './systems/SchedulerSystem.js'
 import { AudioSystem } from './systems/AudioSystem.js'
+import { ResizeSystem } from './systems/ResizeSystem.js'
 import { RenderSystem } from './systems/RenderSystem.js'
 
 export class Game {
@@ -17,10 +18,13 @@ export class Game {
 
   constructor(options) {
     this.#systems = {
+      resize: new ResizeSystem(this.componentRegistry, {
+        canvas: options?.canvas
+      }),
       input: new InputSystem(this.#componentRegistry),
       scheduler: new SchedulerSystem(this.#componentRegistry),
       audio: new AudioSystem(this.#componentRegistry),
-      render: new RenderSystem(this.#componentRegistry, {
+      render: new RenderSystem(this.#componentRegistry, this.#resources, {
         canvas: options?.canvas
       })
     }

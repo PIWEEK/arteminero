@@ -6,7 +6,7 @@ export class PerspectiveProjection {
 
   #aspectRatio = 1.0
 
-  #fieldOfView = Math.PI / 4
+  #fieldOfView = Math.PI / 2
 
   #near = 0.01
 
@@ -59,6 +59,11 @@ export class PerspectiveProjection {
   }
 
   update() {
-    this.#matrix.perspectiveNO(this.#fieldOfView, this.#aspectRatio, this.#near, this.#far)
+    this.#matrix.perspectiveNO(
+      this.#fieldOfView,
+      this.#aspectRatio,
+      this.#near,
+      this.#far
+    )
   }
 }
