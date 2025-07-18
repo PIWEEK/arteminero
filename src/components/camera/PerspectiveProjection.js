@@ -10,7 +10,7 @@ export class PerspectiveProjection {
 
   #near = 0.01
 
-  #far = 100.0
+  #far = 1000.0
 
   #updatable = new Updatable(true)
 

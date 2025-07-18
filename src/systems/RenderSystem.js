@@ -79,6 +79,8 @@ export class RenderSystem extends System {
     gl.clearColor(0.0, 0.0, 0.0, 1.0)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
+    gl.enable(gl.DEPTH)
+
     gl.viewport(0, 0, this.#canvas.width, this.#canvas.height)
 
     // Sets the default program.
@@ -120,39 +122,41 @@ export class RenderSystem extends System {
         .copy(this.#currentProjectionMatrix)
         .multiply(this.#currentViewMatrix)
 
-      // ModelViewProjection Matrix
-      this.#currentModelViewProjectionMatrix
-        .copy(this.#currentViewProjectionMatrix)
-        .multiply(this.#currentModelMatrix)
-
-      console.log(this.#currentModelMatrix.join(', '))
-      console.log(this.#currentProjectionMatrix.join(', '))
-      console.log(this.#currentViewMatrix.join(', '))
-      console.log(this.#currentModelViewProjectionMatrix.join(', '))
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.#defaultBuffer)
       gl.enableVertexAttribArray(
         this.#defaultProgram.attributes.a_position.location
       )
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.#defaultBuffer)
       gl.vertexAttribPointer(
         this.#defaultProgram.attributes.a_position.location,
-        3, gl.FLOAT, false, 0, 0
-      )
-
-      gl.uniformMatrix4fv(
-        this.#defaultProgram.uniforms.u_modelViewProjection.location,
+        3,
+        gl.FLOAT,
         false,
-        this.#currentModelViewProjectionMatrix
+        0,
+        0
       )
-
-      gl.drawArrays(gl.POINTS, 0, 100)
 
       //
       const blockChunks = this.componentRegistry.findByConstructor(BlockChunkComponent)
       for (const blockChunk of blockChunks) {
+        // Model matrix
+        this.#currentModelMatrix
+          .identity()
+          .translate(blockChunk.position)
 
+        // ModelViewProjection matrix
+        this.#currentModelViewProjectionMatrix
+          .copy(this.#currentProjectionMatrix)
+          .multiply(this.#currentViewMatrix)
+          .multiply(this.#currentModelMatrix)
+
+        gl.uniformMatrix4fv(
+          this.#defaultProgram.uniforms.u_modelViewProjection.location,
+          false,
+          this.#currentModelViewProjectionMatrix
+        )
+
+        gl.drawArrays(gl.POINTS, 0, 100)
       }
-
     }
   }
 }

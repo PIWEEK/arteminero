@@ -1,5 +1,6 @@
 import { TransformComponent } from '../components/TransformComponent.js'
 import { CameraComponent } from '../components/CameraComponent.js'
+import { BlockChunkComponent } from '../components/BlockChunkComponent.js'
 
 export function * MainTask(game) {
   const camera = new CameraComponent('player')
@@ -11,16 +12,25 @@ export function * MainTask(game) {
     }
   })
 
+  for (let x = -3; x < 3; x++) {
+    for (let z = -3; z < 3; z++) {
+      const blockChunk = new BlockChunkComponent(`terrain:${x}:${z}`, {
+        x, z
+      })
+      game.componentRegistry.register(blockChunk)
+    }
+  }
+
   game.componentRegistry.register(camera)
   game.componentRegistry.register(transform)
 
   while(true) {
     if (game.systems.input.keyboard.isPressed('ArrowLeft')) {
       console.log('Left')
-      transform.rotationY -= 0.1
+      transform.rotationY += 0.1
     } else if (game.systems.input.keyboard.isPressed('ArrowRight')) {
       console.log('Right')
-      transform.rotationY += 0.1
+      transform.rotationY -= 0.1
     }
     if (game.systems.input.keyboard.isPressed('ArrowUp')) {
       console.log('Up')
@@ -31,24 +41,24 @@ export function * MainTask(game) {
     }
     if (game.systems.input.keyboard.isPressed('KeyA')) {
       console.log('Strafe Left')
-      // transform.rotationX -= 0.1
+      transform.left(0.1)
     } else if (game.systems.input.keyboard.isPressed('KeyD')) {
       console.log('Strafe Right')
-      // transform.rotationX -= 0.1
+      transform.right(0.1)
     }
     if (game.systems.input.keyboard.isPressed('KeyW')) {
       console.log('Forward')
-      transform.z--
+      transform.forward(0.1)
     } else if (game.systems.input.keyboard.isPressed('KeyS')) {
       console.log('Backward')
-      transform.z++
+      transform.backward(0.1)
     }
     if (game.systems.input.keyboard.isPressed('Space')) {
       console.log('Jump')
-      transform.y--
+      transform.up(0.1)
     } else if (game.systems.input.keyboard.isPressed('Enter')) {
       console.log('Use')
-      transform.y--
+      transform.down(0.1)
     }
     yield
   }
