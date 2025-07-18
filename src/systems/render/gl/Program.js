@@ -71,7 +71,7 @@ export class Program {
 
   #getUniforms() {
     const gl = this.#gl
-    const count = gl.getProgramParameter(this.#program, gl.ACTIVE_ATTRIBUTES)
+    const count = gl.getProgramParameter(this.#program, gl.ACTIVE_UNIFORMS)
     const uniforms = {}
     for (let index = 0; index < count; index++) {
       const { name, size, type } = gl.getActiveUniform(this.#program, index)

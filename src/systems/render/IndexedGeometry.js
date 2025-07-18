@@ -1,10 +1,10 @@
 export class IndexedGeometry {
-  #vertices = null
-  #indices = null
+  #vertices = []
+  #indices = []
 
   constructor(vertices, indices) {
-    this.#vertices = new Float32Array(vertices)
-    this.#indices = new Uint32Array(indices)
+    this.#vertices = vertices ?? []
+    this.#indices = indices ?? []
   }
 
   get vertices() {
@@ -13,5 +13,11 @@ export class IndexedGeometry {
 
   get indices() {
     return this.#indices
+  }
+
+  append(indexedGeometry) {
+    const length = this.#vertices.length / 3
+    this.#vertices.push(...indexedGeometry.vertices)
+    this.#indices.push(...indexedGeometry.indices.map(index => length + index))
   }
 }

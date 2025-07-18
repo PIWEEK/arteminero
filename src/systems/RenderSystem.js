@@ -5,6 +5,9 @@ import { System } from './System.js'
 import { BlockChunkComponent } from '../components/BlockChunkComponent.js'
 import { Shader } from './render/gl/Shader.js'
 import { Program } from './render/gl/Program.js'
+import { Buffer } from './render/gl/Buffer.js'
+import { VertexArrayObject } from './render/gl/VertexArrayObject.js'
+import { BlockChunkBuilder } from './render/BlockChunkBuilder.js'
 import defaultVertexShader from './render/shaders/default.v.glsl?raw'
 import defaultFragmentShader from './render/shaders/default.f.glsl?raw'
 
@@ -15,6 +18,9 @@ export class RenderSystem extends System {
    * @type {WebGL2RenderingContext}
    */
   #gl
+
+  // NOTA: Esto mantendrá la cache de los bloques.
+  #blockChunkCache = new Map()
 
   #currentModelMatrix = new Mat4()
   #currentViewMatrix = new Mat4()
@@ -79,7 +85,7 @@ export class RenderSystem extends System {
     gl.clearColor(0.0, 0.0, 0.0, 1.0)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    gl.enable(gl.DEPTH)
+    gl.enable(gl.DEPTH_TEST)
 
     gl.viewport(0, 0, this.#canvas.width, this.#canvas.height)
 
@@ -138,6 +144,39 @@ export class RenderSystem extends System {
       //
       const blockChunks = this.componentRegistry.findByConstructor(BlockChunkComponent)
       for (const blockChunk of blockChunks) {
+        if (blockChunk.needsUpdate || !this.#blockChunkCache.has(blockChunk.id)) {
+          const indexedGeometry = BlockChunkBuilder.build(blockChunk)
+          const vertexBuffer = new Buffer(gl)
+          vertexBuffer.create()
+          vertexBuffer.bufferData(new Float32Array(indexedGeometry.vertices))
+          const indexBuffer = new Buffer(gl, {
+            target: gl.ELEMENT_ARRAY_BUFFER
+          })
+          indexBuffer.create()
+          indexBuffer.bufferData(new Uint32Array(indexedGeometry.indices))
+          const vao = new VertexArrayObject(
+            gl,
+            {
+              attributes: [
+                {
+                  location: 0,
+                  size: 3,
+                  type: gl.FLOAT,
+                  stride: 0,
+                  offset: 0,
+                  buffer: vertexBuffer.buffer
+                }
+              ],
+              indexBuffer: indexBuffer.buffer,
+              mode: gl.TRIANGLES,
+              count: indexedGeometry.indices.length / 3
+            }
+          )
+          vao.bindAll()
+          blockChunk.updated()
+          this.#blockChunkCache.set(blockChunk.id, vao)
+        }
+
         // Model matrix
         this.#currentModelMatrix
           .identity()
@@ -149,13 +188,23 @@ export class RenderSystem extends System {
           .multiply(this.#currentViewMatrix)
           .multiply(this.#currentModelMatrix)
 
+        gl.uniform3fv(
+          this.#defaultProgram.uniforms.u_color.location,
+          blockChunk.color
+        )
+
         gl.uniformMatrix4fv(
           this.#defaultProgram.uniforms.u_modelViewProjection.location,
           false,
           this.#currentModelViewProjectionMatrix
         )
 
+        /*
         gl.drawArrays(gl.POINTS, 0, 100)
+        */
+
+        const vao = this.#blockChunkCache.get(blockChunk.id)
+        vao.draw()
       }
     }
   }
