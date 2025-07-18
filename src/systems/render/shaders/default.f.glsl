@@ -8,6 +8,11 @@ out vec4 fragColor;
 
 uniform vec3 u_color;
 
+float from(float value, float fmin, float fmax) {
+  return (value - fmin) / (fmax - fmin);
+}
+
 void main() {
-  fragColor = vec4(2.0 / v_position.z * u_color.x, u_color.y, 2.0 / v_position.z * u_color.z, 1.0);
+  float iz = from(v_position.z, 32.0, 1.0);
+  fragColor = vec4(iz * u_color.x, iz * u_color.y, iz * u_color.z, 1.0);
 }

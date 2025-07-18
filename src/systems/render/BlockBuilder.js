@@ -2,7 +2,26 @@ import { BlockSide } from './BlockSide.js'
 import { IndexedGeometry } from './IndexedGeometry.js'
 
 export class BlockBuilder {
-  static buildTop(x, y, z, sx = 0.5, sy = -0.5, sz = 0.5) {
+  static buildX(x, y, z, sx = 0.5, sy = 0.5, sz = 0.5, flipped) {
+    const vertices = [
+      x + sx, y + sy, z - sz,
+      x + sx, y - sy, z - sz,
+      x + sx, y + sy, z + sz,
+      x + sx, y - sy, z + sz,
+    ]
+
+    const indices = flipped ? [
+      1, 0, 3,
+      0, 2, 3
+    ] : [
+      0, 1, 2,
+      1, 3, 2
+    ]
+
+    return new IndexedGeometry(vertices, indices)
+  }
+
+  static buildY(x, y, z, sx = 0.5, sy = 0.5, sz = 0.5, flipped) {
     const vertices = [
       x - sx, y + sy, z - sz,
       x - sx, y + sy, z + sz,
@@ -10,44 +29,58 @@ export class BlockBuilder {
       x + sx, y + sy, z + sz,
     ]
 
-    const indices = [
+    const indices = flipped ? [
+      1, 0, 3,
+      0, 2, 3
+    ] : [
       0, 1, 2,
       1, 3, 2
     ]
 
     return new IndexedGeometry(vertices, indices)
+  }
+
+  static buildZ(x, y, z, sx = 0.5, sy = 0.5, sz = 0.5, flipped) {
+    const vertices = [
+      x - sx, y + sy, z + sz,
+      x - sx, y - sy, z + sz,
+      x + sx, y + sy, z + sz,
+      x + sx, y - sy, z + sz,
+    ]
+
+    const indices = flipped ? [
+      1, 0, 3,
+      0, 2, 3
+    ] : [
+      0, 1, 2,
+      1, 3, 2
+    ]
+
+    return new IndexedGeometry(vertices, indices)
+  }
+
+  static buildTop(x, y, z, sx = 0.5, sy = -0.5, sz = 0.5) {
+    return this.buildY(x, y, z, sx, sy, sz, false)
   }
 
   static buildBottom(x, y, z, sx = 0.5, sy = +0.5, sz = 0.5) {
-    const vertices = [
-      x - sx, y + sy, z - sz,
-      x - sx, y + sy, z + sz,
-      x + sx, y + sy, z - sz,
-      x + sx, y + sy, z + sz,
-    ]
-
-    const indices = [
-      0, 1, 2,
-      1, 3, 2
-    ]
-
-    return new IndexedGeometry(vertices, indices)
+    return this.buildY(x, y, z, sx, sy, sz, true)
   }
 
-  static buildLeft(x, y, z) {
-
+  static buildLeft(x, y, z, sx = -0.5, sy = 0.5, sz = 0.5) {
+    return this.buildX(x, y, z, sx, sy, sz, false)
   }
 
-  static buildRight(x, y, z) {
-
+  static buildRight(x, y, z, sx = +0.5, sy = 0.5, sz = 0.5) {
+    return this.buildX(x, y, z, sx, sy, sz, true)
   }
 
-  static buildFront(x, y, z) {
-
+  static buildFront(x, y, z, sx = 0.5, sy = 0.5, sz = -0.5) {
+    return this.buildZ(x, y, z, sx, sy, sz, false)
   }
 
-  static buildBack(x, y, z) {
-
+  static buildBack(x, y, z, sx = 0.5, sy = 0.5, sz = +0.5) {
+    return this.buildZ(x, y, z, sx, sy, sz, true)
   }
 
   static build(side, x, y, z) {

@@ -12,8 +12,8 @@ export function * MainTask(game) {
     }
   })
 
-  for (let x = -1; x < 1; x++) {
-    for (let z = -1; z < 1; z++) {
+  for (let x = -3; x <= 3; x++) {
+    for (let z = -3; z <= 3; z++) {
       const blockChunk = new BlockChunkComponent(`block-chunk:${x}:${z}`, {
         x, z
       })
